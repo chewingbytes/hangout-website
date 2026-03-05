@@ -93,13 +93,31 @@ const { title } = Astro.props;
 
   /* Dialog */
   dialog {
-    position: relative;
+    position: fixed;
+    inset: 0;
+    margin: auto;
     border: none;
     outline: none;
     padding: 0;
+    width: min(32rem, calc(100vw - 2rem)) !important;
+    max-width: calc(100vw - 2rem) !important;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
   dialog::backdrop {
     background: rgba(0, 0, 0, 0.75);
+  }
+
+  @media (min-width: 500px) {
+    dialog {
+      inset: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+    }
   }
 
   /* Focus ring */
