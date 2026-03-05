@@ -1,0 +1,866 @@
+---
+import Layout from "../layouts/Layout.astro";
+import logo from "../logo.png";
+import {
+  ShieldCheck,
+  Users,
+  Zap,
+  Star,
+  ArrowRight,
+  Menu,
+  Sparkles,
+  Ban,
+  School,
+  Key,
+  Calendar,
+  MapPin,
+  Clock,
+  ChevronRight,
+  Gamepad2,
+  Dumbbell,
+  BookOpen,
+  Coffee,
+  Cpu,
+  Camera,
+  Lock,
+  X,
+  CheckCircle,
+} from "lucide-react";
+
+const personalityColors = {
+  INTJ: "bg-red-300",
+  INTP: "bg-orange-300",
+  ENTJ: "bg-amber-300",
+  ENTP: "bg-yellow-300",
+  INFJ: "bg-lime-300",
+  INFP: "bg-green-300",
+  ENFJ: "bg-emerald-300",
+  ENFP: "bg-teal-300",
+  ISTJ: "bg-cyan-300",
+  ISFJ: "bg-sky-300",
+  ESTJ: "bg-blue-300",
+  ESFJ: "bg-indigo-300",
+  ISTP: "bg-violet-300",
+  ISFP: "bg-purple-300",
+  ESTP: "bg-fuchsia-300",
+  ESFP: "bg-pink-300",
+};
+
+const personalities = [
+  // Analysts
+  { type: "INTJ", label: "The Strategist", color: personalityColors.INTJ, desc: "Quiet achiever, long-game player", emoji: "🧠" },
+  { type: "INTP", label: "The Thinker", color: personalityColors.INTP, desc: "Curious mind, loves ideas", emoji: "🧩" },
+  { type: "ENTJ", label: "The Commander", color: personalityColors.ENTJ, desc: "Bold leader, big vision", emoji: "🦁" },
+  { type: "ENTP", label: "The Debater", color: personalityColors.ENTP, desc: "Loves to argue (nicely)", emoji: "🔥" },
+
+  // Diplomats
+  { type: "INFJ", label: "The Advocate", color: personalityColors.INFJ, desc: "Insightful, values-driven", emoji: "🌙" },
+  { type: "INFP", label: "The Mediator", color: personalityColors.INFP, desc: "Idealistic, creative heart", emoji: "🎭" },
+  { type: "ENFJ", label: "The Mentor", color: personalityColors.ENFJ, desc: "Encouraging, people-first", emoji: "🌟" },
+  { type: "ENFP", label: "The Connector", color: personalityColors.ENFP, desc: "Social butterfly, idea machine", emoji: "🦋" },
+
+  // Sentinels
+  { type: "ISTJ", label: "The Inspector", color: personalityColors.ISTJ, desc: "Reliable, detail-focused", emoji: "📘" },
+  { type: "ISFJ", label: "The Protector", color: personalityColors.ISFJ, desc: "Caring, dependable friend", emoji: "🛡️" },
+  { type: "ESTJ", label: "The Executive", color: personalityColors.ESTJ, desc: "Organizer, gets it done", emoji: "📌" },
+  { type: "ESFJ", label: "The Consul", color: personalityColors.ESFJ, desc: "Warm, community-builder", emoji: "🤝" },
+
+  // Explorers
+  { type: "ISTP", label: "The Virtuoso", color: personalityColors.ISTP, desc: "Hands-on, adaptable", emoji: "🛠️" },
+  { type: "ISFP", label: "The Creator", color: personalityColors.ISFP, desc: "Makes beautiful things", emoji: "🎨" },
+  { type: "ESTP", label: "The Thrill-Seeker", color: personalityColors.ESTP, desc: "Action first, questions later", emoji: "⚡" },
+  { type: "ESFP", label: "The Entertainer", color: personalityColors.ESFP, desc: "Playful, lives in the moment", emoji: "🎉" },
+];
+
+const categories = [
+  { name: "Gaming", icon: "🎮", color: "bg-neo-secondary", count: "42 groups" },
+  { name: "Sports", icon: "⚽", color: "bg-neo-primary", count: "38 groups" },
+  { name: "Study", icon: "📚", color: "bg-neo-muted", count: "29 groups" },
+  { name: "Hobbies", icon: "🎭", color: "bg-green-300", count: "51 groups" },
+  { name: "Tech", icon: "💻", color: "bg-blue-300", count: "24 groups" },
+  { name: "Chill", icon: "🧋", color: "bg-orange-200", count: "33 groups" },
+];
+
+// Sample event card members
+const eventMembers = [
+  { name: "John", initial: "J", personality: "ENFP", school: "NTU" },
+  { name: "Alice", initial: "A", personality: "INTJ", school: "NUS" },
+  { name: "Marcus", initial: "M", personality: "ESTP", school: "SP" },
+  { name: "Priya", initial: "P", personality: "INFJ", school: "TP" },
+];
+
+// Coming soon communities
+const comingSoonCommunities = [
+  { name: "K-Pop Dance Crew", emoji: "💃", category: "Hobbies", slots: "50 slots" },
+  { name: "Night Market Hunters", emoji: "🍜", category: "Chill", slots: "80 slots" },
+  { name: "Campus Chess League", emoji: "♟️", category: "Study", slots: "30 slots" },
+  { name: "Indie Music Jam", emoji: "🎸", category: "Hobbies", slots: "40 slots" },
+  { name: "3D Printing Collective", emoji: "🖨️", category: "Tech", slots: "25 slots" },
+  { name: "Late Night Supper Club", emoji: "🌙", category: "Chill", slots: "60 slots" },
+];
+---
+
+<Layout title="Hangout! - Safe Student Communities in Singapore">
+
+  <!-- Waitlist Modal -->
+  <dialog id="waitlist-modal" class="border-4 border-black max-w-md w-full mx-4">
+    <div class="bg-neo-bg p-8 relative">
+      <div class="absolute -top-5 -right-5 w-12 h-12 bg-neo-secondary border-4 border-black rotate-12 flex items-center justify-center shadow-neo">
+        <Sparkles className="w-6 h-6" />
+      </div>
+      <button
+        id="close-waitlist"
+        class="absolute top-4 right-4 w-10 h-10 border-4 border-black bg-white flex items-center justify-center font-black text-xl hover:bg-neo-primary hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo"
+        aria-label="Close"
+      >✕</button>
+
+      <div class="mb-6">
+        <div class="inline-block bg-neo-primary border-2 border-black px-3 py-1 font-black text-xs uppercase tracking-widest mb-3 -rotate-1">
+          🇸🇬 Students Only
+        </div>
+        <h2 class="text-4xl font-black uppercase leading-none mb-2">Join the Waitlist</h2>
+        <p class="font-bold text-lg">Get early access when Hangout! launches.</p>
+      </div>
+
+      <div class="bg-neo-secondary border-4 border-black p-4 mb-6">
+        <div class="flex items-center gap-2 mb-1">
+          <ShieldCheck className="w-5 h-5" />
+          <span class="font-black uppercase text-sm">Use Your School Email</span>
+        </div>
+        <p class="font-medium text-sm">Enter your official school email (e.g. <code class="bg-black text-white px-1 font-mono">you@tp.edu.sg</code>).</p>
+      </div>
+
+      <form id="waitlist-form" class="space-y-4">
+        <div>
+          <label class="block font-black uppercase text-sm mb-2 tracking-wider">School Email Address</label>
+          <input
+            type="email"
+            id="waitlist-email"
+            placeholder="yourname@school.edu.sg"
+            required
+            class="w-full border-4 border-black p-4 font-bold text-lg bg-white focus:bg-neo-secondary focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30"
+          />
+          <p class="text-xs font-bold mt-1 text-black/50">Must be a .edu.sg email, no personal emails allowed</p>
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-neo-primary border-4 border-black py-4 font-black text-xl uppercase tracking-wider hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo-md flex items-center justify-center gap-3"
+        >
+          <Zap className="w-6 h-6 fill-black" />
+          Secure My Spot
+        </button>
+      </form>
+
+      <div id="waitlist-success" class="hidden text-center py-6">
+        <div class="text-5xl mb-4">🎉</div>
+        <h3 class="text-3xl font-black uppercase mb-2">You're on the list!</h3>
+        <p class="font-bold text-lg">We'll hit your inbox the moment we launch. Don't ghost us.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 bg-neo-bg border-b-4 border-black px-4 py-3">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <a href="/" class="flex items-center gap-1 font-black uppercase tracking-tighter text-2xl">
+        <img src={logo.src} alt="Hangout!" class="w-20 h-auto object-contain" />
+        Hangout!
+      </a>
+
+      <div class="hidden md:flex gap-6 items-center font-bold">
+        <a href="#how-it-works" class="uppercase text-sm tracking-wide hover:bg-black hover:text-white hover:px-3 hover:py-1 border-2 border-transparent hover:border-black transition-all">How It Works</a>
+        <a href="#safety" class="uppercase text-sm tracking-wide hover:bg-black hover:text-white hover:px-3 hover:py-1 border-2 border-transparent hover:border-black transition-all">Safety</a>
+        <a href="/communities" class="uppercase text-sm tracking-wide hover:bg-black hover:text-white hover:px-3 hover:py-1 border-2 border-transparent hover:border-black transition-all">Communities</a>
+        <button
+          class="open-waitlist bg-neo-secondary px-6 py-2 border-4 border-black font-black uppercase text-sm tracking-wide hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo flex items-center gap-2"
+        >
+          <Zap className="w-4 h-4 fill-black" />
+          Join Waitlist
+        </button>
+      </div>
+
+      <button id="mobile-menu-btn" class="md:hidden w-12 h-12 border-4 border-black flex items-center justify-center bg-white shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all" aria-label="Menu">
+        <Menu className="w-6 h-6" />
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t-4 border-black mt-3 pt-4 pb-2 flex-col gap-3">
+      <a href="#how-it-works" class="font-black uppercase px-4 py-3 border-2 border-black bg-white hover:bg-black hover:text-white transition-colors">How It Works</a>
+      <a href="#safety" class="font-black uppercase px-4 py-3 border-2 border-black bg-white hover:bg-black hover:text-white transition-colors">Safety</a>
+      <a href="/communities" class="font-black uppercase px-4 py-3 border-2 border-black bg-white hover:bg-black hover:text-white transition-colors">Communities</a>
+      <button class="open-waitlist bg-neo-primary px-4 py-3 border-4 border-black font-black uppercase shadow-neo flex items-center gap-2 justify-center">
+        <Zap className="w-4 h-4 fill-black" /> Join Waitlist
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="relative overflow-hidden border-b-4 border-black bg-neo-bg">
+    <!-- Grid background -->
+    <div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+    <!-- Floating sticker decorations -->
+    <div class="hidden sm:block absolute top-8 right-4 md:right-16 lg:right-24 z-20 pointer-events-none">
+      <div class="bg-neo-primary border-4 border-black p-4 rotate-12 shadow-neo-lg animate-float">
+        <div class="text-white font-black text-center leading-none">
+          <div class="text-3xl">🛡️</div>
+          <div class="text-xs uppercase mt-1 tracking-widest">No Creeps</div>
+        </div>
+      </div>
+    </div>
+    <div class="hidden sm:block absolute top-32 right-2 md:right-8 z-20 pointer-events-none">
+      <div class="bg-neo-secondary border-4 border-black px-3 py-2 -rotate-6 shadow-neo">
+        <span class="font-black text-xs uppercase tracking-widest">Singpass<br/>Verified ✓</span>
+      </div>
+    </div>
+    <div class="absolute bottom-16 left-2 md:left-8 z-20 hidden 2xl:block pointer-events-none">
+      <div class="bg-neo-muted border-4 border-black p-3 rotate-3 shadow-neo animate-bounce-slow">
+        <span class="font-black text-xs uppercase block">SG Students</span>
+        <span class="font-black text-xs uppercase block">Only!</span>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 pt-16 pb-24 grid lg:grid-cols-2 gap-16 items-center relative z-10">
+
+      <!-- Left: Text -->
+      <div class="space-y-8">
+        <div class="flex flex-wrap gap-3 items-center">
+          <span class="bg-neo-secondary border-2 border-black px-3 py-1 font-black text-xs uppercase tracking-widest -rotate-1 shadow-neo inline-block">🇸🇬 Singapore Students Only</span>
+          <span class="bg-neo-primary border-2 border-black px-3 py-1 font-black text-xs uppercase tracking-widest rotate-1 shadow-neo inline-block text-white">Beta Coming Soon</span>
+        </div>
+
+        <h1 class="text-5xl sm:text-6xl md:text-8xl font-black leading-[0.85] uppercase tracking-tighter">
+          Your
+          <span style="-webkit-text-stroke: 3px black; color: transparent;" class="select-none">Crowd</span>
+          <span class="bg-neo-primary px-3 ml-2 inline-block rotate-[-1deg] shadow-neo-md">Exists.</span><br/>
+          <span class="text-3xl sm:text-4xl md:text-5xl font-black">Go Find Them.</span>
+        </h1>
+
+        <p class="text-lg md:text-xl font-bold max-w-lg border-l-4 border-black pl-5 py-2 bg-white/50">
+          Real offline hangouts with verified Singapore students. From bouldering to sim-racing to 2AM prata runs — find your people across schools, safely.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button class="open-waitlist group bg-neo-primary border-4 border-black px-8 py-4 font-black text-xl uppercase tracking-wider hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo-lg flex items-center justify-center gap-3">
+            <Zap className="w-6 h-6 fill-black group-hover:scale-125 transition-transform" />
+            Join Waitlist
+          </button>
+          <a href="/communities" class="group bg-white border-4 border-black px-8 py-4 font-black text-xl uppercase tracking-wider hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo-lg flex items-center justify-center gap-3">
+            Browse Communities
+            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+          </a>
+        </div>
+
+        <!-- Trust bar -->
+        <div class="flex flex-wrap gap-4 pt-2">
+          {[
+            { icon: "✓", text: "Singpass Verified" },
+            { icon: "✓", text: "Age-Gated" },
+            { icon: "✓", text: "Zero Creeps Policy" },
+          ].map((item) => (
+            <div class="flex items-center gap-2 font-bold text-sm">
+              <span class="w-6 h-6 bg-green-400 border-2 border-black flex items-center justify-center font-black text-xs">{item.icon}</span>
+              {item.text}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Right: Interactive phone-like UI mockup -->
+      <div class="relative hidden lg:block">
+        <!-- Shadow layer -->
+        <div class="absolute inset-0 bg-black translate-x-5 translate-y-5 border-4 border-black -z-10"></div>
+
+        <div class="bg-white border-4 border-black p-0 rotate-1 overflow-hidden">
+          <!-- Phone top bar -->
+          <div class="bg-black text-white px-4 py-2 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-neo-primary border border-white/50"></div>
+              <div class="w-3 h-3 rounded-full bg-neo-secondary border border-white/50"></div>
+              <div class="w-3 h-3 rounded-full bg-green-400 border border-white/50"></div>
+            </div>
+            <span class="font-mono text-xs">hangout.sg — BETA</span>
+            <div class="flex items-center gap-1 font-mono text-xs">
+              <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+              LIVE
+            </div>
+          </div>
+
+          <!-- App content mockup -->
+          <div class="p-8 bg-neo-bg space-y-3">
+            <!-- Heading -->
+            <div class="font-black uppercase text-xs tracking-widest text-black/50">HAPPENING NEAR YOU</div>
+
+            <!-- Event card 1 -->
+            <div class="bg-white border-4 border-black p-4 shadow-neo hover:-translate-y-1 transition-transform cursor-pointer group">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <div class="bg-neo-secondary border-2 border-black px-2 py-0.5 font-black text-xs uppercase inline-block mb-1">🎮 Gaming</div>
+                  <h3 class="font-black text-lg sm:text-xl md:text-3xl uppercase leading-tight">PickleBall Weekend Scrim</h3>
+                  <div class="flex items-center gap-3 text-xs sm:text-md md:text-lg font-bold text-black/60 mt-1">
+                    <span class="flex items-center gap-1"><MapPin className="w-3 h-3" />Tampines Hub</span>
+                    <span class="flex items-center gap-1"><Clock className="w-3 h-3" />Sat 3PM</span>
+                  </div>
+                </div>
+                <div class="bg-green-500 border-2 border-black p-2 text-xl">🎾</div>
+              </div>
+              <!-- Member avatars -->
+              <div class="flex items-center gap-2 pt-3 border-t-2 border-black">
+                <div class="flex -space-x-2">
+                  {eventMembers.map((m) => (
+                    <div class={`w-8 h-8 ${personalityColors[m.personality]} border-2 border-black rounded-full flex items-center justify-center font-black text-xs`} title={`${m.name} — ${m.personality}`}>
+                      {m.initial}
+                    </div>
+                  ))}
+                </div>
+                <div class="flex-1">
+                  <div class="font-black text-xs">{eventMembers.map(m => m.name).join(", ")} +12 going</div>
+                  <div class="flex gap-1 mt-0.5">
+                    {eventMembers.slice(0, 3).map((m) => (
+                      <span class={`font-mono text-[9px] px-1 border border-black ${personalityColors[m.personality]} text-black`}>{m.personality}</span>
+                    ))}
+                  </div>
+                </div>
+                <div class="open-waitlist bg-black text-white px-3 py-1 font-black text-xs uppercase border-2 border-black group-hover:bg-neo-primary group-hover:text-black transition-colors">Join</div>
+              </div>
+            </div>
+
+            <!-- Event card 2 mini -->
+            <div class="bg-neo-muted border-2 border-black p-3 flex items-center gap-3 hover:-translate-y-0.5 transition-transform cursor-pointer">
+              <div class="text-2xl">🧗</div>
+              <div class="flex-1">
+                <div class="font-black text-sm uppercase">Bouldering @ BFF Climb Bendemeer</div>
+                <div class="font-bold text-xs text-black/60">Sun 10AM · 8 going</div>
+              </div>
+              <div class="flex -space-x-1">
+                <div class="w-6 h-6 bg-neo-secondary border-2 border-black rounded-full flex items-center justify-center text-[9px] font-black">A</div>
+                <div class="w-6 h-6 bg-neo-primary border-2 border-black rounded-full flex items-center justify-center text-[9px] font-black">J</div>
+                <div class="w-6 h-6 bg-white border-2 border-black rounded-full flex items-center justify-center text-[9px] font-black">+6</div>
+              </div>
+            </div>
+
+            <!-- Personality match teaser -->
+            <div class="bg-black text-white border-2 border-white/20 p-3 flex items-center gap-3">
+              <Sparkles className="w-5 h-5 text-neo-secondary flex-shrink-0" />
+              <div>
+                <div class="font-black text-xs uppercase">Personality Match Active</div>
+                <div class="font-bold text-xs text-white/60">
+                  <span class={`px-1 border border-black ${personalityColors.ENFP} text-black`}>ENFP</span> users love this community ⚡
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Marquee Strip -->
+  <div class="border-y-4 border-black bg-neo-secondary overflow-hidden py-3">
+    <div class="whitespace-nowrap flex gap-8 text-2xl font-black uppercase tracking-widest animate-marquee">
+      <span>STUDENT-ONLY ✦ SINGPASS VERIFIED ✦ SAFE SPACES ✦ NO CREEPS ✦ REAL CONNECTIONS ✦ OFFLINE HANGOUTS ✦ AGE-GATED ✦ ACROSS ALL SCHOOLS ✦ </span>
+      <span>STUDENT-ONLY ✦ SINGPASS VERIFIED ✦ SAFE SPACES ✦ NO CREEPS ✦ REAL CONNECTIONS ✦ OFFLINE HANGOUTS ✦ AGE-GATED ✦ ACROSS ALL SCHOOLS ✦ </span>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS / PERSONALITY SECTION -->
+  <section id="how-it-works" class="py-24 px-4 bg-white border-b-4 border-black relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none opacity-30" style="background-image: radial-gradient(#000 1.5px, transparent 1.5px); background-size: 30px 30px;"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+      <div class="mb-16 grid lg:grid-cols-2 gap-12 items-end">
+        <div>
+          <div class="inline-block bg-neo-primary border-2 border-black px-3 py-1 font-black text-xs uppercase tracking-widest mb-4 -rotate-1">Step 1 of 3</div>
+          <h2 class="text-5xl md:text-7xl font-black uppercase leading-none mb-4">
+            Show Up<br/>
+            <span class="bg-neo-secondary border-4 border-black px-3 inline-block rotate-[-1deg] shadow-neo-md">As You Are.</span>
+          </h2>
+          <p class="text-xl font-bold max-w-xl">Run through a simple personality test. We interest-match you with people that actually match your vibe, not just your school and interests.</p>
+        </div>
+        <div class="text-right">
+          <div class="inline-block bg-black text-white border-4 border-black p-4 rotate-2 shadow-neo-lg">
+            <div class="font-black text-5xl">16</div>
+            <div class="font-bold text-sm uppercase tracking-widest">Personality<br/>Types Supported</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personality type cards - interactive -->
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
+        {personalities.map((p, i) => (
+          <button
+            class={`personality-card group ${p.color} border-4 border-black p-4 text-left hover:-translate-y-2 hover:shadow-neo-lg transition-all duration-200 shadow-neo-md cursor-pointer`}
+            data-type={p.type}
+          >
+            <div class="text-3xl mb-2 group-hover:scale-125 transition-transform inline-block">{p.emoji}</div>
+            <div class="font-black text-xl uppercase">{p.type}</div>
+            <div class="font-black text-xs uppercase tracking-wider leading-tight">{p.label}</div>
+            <div class="font-bold text-xs mt-2 opacity-70 group-hover:opacity-100 transition-opacity">{p.desc}</div>
+          </button>
+        ))}
+      </div>
+
+      <!-- Personality-matched event card demo -->
+      <div class="grid lg:grid-cols-2 gap-8 items-start">
+
+        <!-- Left: Find Your Crowd - community discovery -->
+        <div class="space-y-4">
+          <div class="inline-block bg-neo-muted border-2 border-black px-3 py-1 font-black text-xs uppercase tracking-widest mb-2 rotate-1">Step 2 of 3</div>
+          <h3 class="text-4xl font-black uppercase leading-tight mb-4">Browse <span class="bg-neo-secondary px-2 border-4 border-black">Niche</span><br/>Communities</h3>
+
+          <!-- Category grid -->
+          <div class="grid grid-cols-3 gap-3">
+            {categories.map((cat) => (
+              <a
+                href={`/communities?category=${cat.name}`}
+                class={`${cat.color} border-4 border-black p-3 text-center hover:-translate-y-1 hover:shadow-neo-md transition-all shadow-neo flex flex-col items-center gap-1 group`}
+              >
+                <span class="text-2xl group-hover:scale-125 transition-transform">{cat.icon}</span>
+                <span class="font-black text-xs uppercase">{cat.name}</span>
+                <span class="font-bold text-[10px] text-black/60">{cat.count}</span>
+              </a>
+            ))}
+          </div>
+
+          <a href="/communities" class="group flex items-center gap-2 font-black uppercase text-sm border-4 border-black bg-black text-white px-6 py-3 hover:bg-neo-primary hover:text-black transition-colors shadow-neo w-fit">
+            See All Communities <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </a>
+        </div>
+
+        <!-- Right: Event card with member personalities -->
+        <div class="relative">
+          <div class="inline-block bg-neo-primary border-2 border-black px-3 py-1 font-black text-xs uppercase tracking-widest mb-4 -rotate-1">Step 3 — Join Events</div>
+
+          <!-- The full event card -->
+          <div class="bg-white border-4 border-black shadow-neo-lg overflow-hidden">
+            <!-- Event header -->
+            <div class="bg-neo-secondary border-b-4 border-black p-5">
+              <div class="flex items-start justify-between mb-2">
+                <div class="bg-black text-white px-2 py-1 font-black text-xs uppercase">🎮 Gaming</div>
+                <div class="font-mono text-xs font-bold border-2 border-black px-2 py-1 bg-white">SAT 22 MAR</div>
+              </div>
+              <h3 class="text-2xl font-black uppercase leading-tight">Weekend MLBB Tournament</h3>
+              <div class="flex gap-4 mt-2 text-sm font-bold">
+                <span class="flex items-center gap-1"><MapPin className="w-3 h-3" />Tampines Hub, Level 3</span>
+                <span class="flex items-center gap-1"><Clock className="w-3 h-3" />3:00 PM — 6:00 PM</span>
+              </div>
+            </div>
+
+            <!-- Members going -->
+            <div class="p-5">
+              <div class="font-black uppercase text-xs tracking-widest mb-3 flex items-center gap-2">
+                <Users className="w-4 h-4" /> Who's Going ({eventMembers.length + 8} confirmed)
+              </div>
+              <div class="space-y-2 mb-4">
+                {eventMembers.map((member) => (
+                  <div class="flex items-center gap-3 border-2 border-black p-2 bg-neo-bg group hover:bg-white transition-colors">
+                    <div class={`w-10 h-10 ${personalityColors[member.personality]} border-2 border-black flex items-center justify-center font-black text-sm flex-shrink-0`}>
+                      {member.initial}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <span class="font-black text-sm uppercase">{member.name}</span>
+                      <span class="font-bold text-xs text-black/50 ml-2">{member.school}</span>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                      <span class={`font-mono text-xs px-1.5 py-0.5 border border-black ${personalityColors[member.personality]} text-black`}>{member.personality}</span>
+                      <span class="w-5 h-5 bg-green-400 border border-black rounded-full flex items-center justify-center">
+                        <CheckCircle className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                <div class="border-2 border-dashed border-black p-2 text-center font-bold text-sm text-black/50">+8 more students confirmed</div>
+              </div>
+
+              <!-- Personality match bar -->
+              <div class="bg-neo-muted border-2 border-black p-3 mb-4">
+                <div class="font-black text-xs uppercase tracking-wider mb-2">Personality Spread</div>
+                <div class="flex gap-1 flex-wrap">
+                  { ["ENFP", "ESTP", "INTJ", "INFJ", "ENTP"].map((type) => (
+                    <span class={`font-mono text-xs font-black px-2 py-0.5 border border-black ${personalityColors[type]} text-black`}>{type}</span>
+                  ))}
+                </div>
+              </div>
+
+              <button class="open-waitlist w-full bg-black text-white border-4 border-black py-3 font-black uppercase tracking-wider hover:bg-neo-primary hover:text-black hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo-md flex items-center justify-center gap-2">
+                <Zap className="w-5 h-5" /> Join This Event
+              </button>
+            </div>
+          </div>
+
+          <!-- Floating Create CTA -->
+          <div class="mt-4 bg-neo-bg border-4 border-black p-4 shadow-neo rotate-[-1deg] flex items-center justify-between gap-4">
+            <div>
+              <div class="font-black uppercase text-sm">Got a niche hobby?</div>
+              <div class="font-bold text-xs text-black/60">Create your own community & events</div>
+            </div>
+            <button class="open-waitlist bg-neo-secondary border-4 border-black px-4 py-2 font-black uppercase text-xs shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex-shrink-0">
+              Create +
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SAFE & VERIFIED SECTION -->
+  <section id="safety" class="py-24 px-4 bg-neo-bg border-b-4 border-black relative overflow-hidden">
+    <!-- Background halftone -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#000 2px, transparent 2px); background-size: 24px 24px;"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+
+      <div class="text-center mb-16">
+        <div class="inline-block bg-neo-muted border-4 border-black px-4 py-2 font-black text-xs uppercase tracking-widest mb-4 rotate-1 shadow-neo">Safety First, Always</div>
+        <h2 class="text-5xl md:text-8xl font-black uppercase leading-none">
+          Safe.
+          <span style="-webkit-text-stroke: 3px black; color: transparent;">Verified.</span><br/>
+          <span class="bg-neo-primary px-4 border-4 border-black shadow-neo-lg inline-block -rotate-1">No Weirdos.</span>
+        </h2>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+        <!-- Left: Visual ID card -->
+        <div class="relative">
+          <!-- Decorative background card -->
+          <div class="absolute inset-0 bg-black translate-x-4 translate-y-4 border-4 border-black -z-10 rotate-2"></div>
+
+          <!-- Main ID card -->
+          <div class="bg-white border-4 border-black p-0 relative overflow-hidden group shadow-neo-lg">
+            <!-- Card header bar -->
+            <div class="bg-neo-secondary border-b-4 border-black px-6 py-4 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-black border-2 border-black flex items-center justify-center">
+                  <ShieldCheck className="w-6 h-6 text-neo-secondary" />
+                </div>
+                <div>
+                  <div class="font-black uppercase text-xs tracking-widest">Hangout! Verified Student</div>
+                  <div class="font-mono text-sm font-bold">IDENTITY CONFIRMED</div>
+                </div>
+              </div>
+              <div class="border-2 border-black bg-green-400 px-2 py-1 font-black text-xs uppercase animate-pulse">LIVE</div>
+            </div>
+
+            <!-- Card body -->
+            <div class="p-6 space-y-4">
+              <div class="flex gap-6 items-start">
+                <!-- Avatar -->
+                <div class="w-24 h-28 bg-neo-muted border-4 border-black flex-shrink-0 overflow-hidden relative">
+                  <div class="absolute inset-0 flex items-center justify-center text-6xl">😎</div>
+                  <div class="absolute bottom-0 left-0 right-0 bg-black text-white text-center font-mono text-[9px] py-0.5">PHOTO</div>
+                </div>
+                <!-- Info -->
+                <div class="space-y-3 flex-1">
+                  <div>
+                    <div class="font-black uppercase text-xs tracking-widest text-black/40">Full Name</div>
+                    <div class="font-black text-2xl uppercase">Jordan Tan Wei</div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <div class="font-black uppercase text-[9px] tracking-widest text-black/40">Institution</div>
+                      <div class="font-bold bg-neo-secondary border border-black px-1">Temasek Poly</div>
+                    </div>
+                    <div>
+                      <div class="font-black uppercase text-[9px] tracking-widest text-black/40">Age Band</div>
+                      <div class="font-bold bg-neo-primary border border-black px-1 text-white">17–21</div>
+                    </div>
+                    <div>
+                      <div class="font-black uppercase text-[9px] tracking-widest text-black/40">Personality</div>
+                      <div class={`font-black border border-black px-1 font-mono ${personalityColors.ENFP} text-black`}>ENFP</div>
+                    </div>
+                    <div>
+                      <div class="font-black uppercase text-[9px] tracking-widest text-black/40">Status</div>
+                      <div class="font-bold bg-green-400 border border-black px-1">✓ Active</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Singpass bar -->
+              <div class="bg-black text-white p-3 flex items-center justify-between border-2 border-black">
+                <div class="flex items-center gap-2">
+                  <Key className="w-4 h-4 text-neo-secondary" />
+                  <span class="font-black text-xs uppercase tracking-wider">Singpass Verified</span>
+                </div>
+                <div class="font-mono text-xs text-green-400">✓ CLEARED</div>
+              </div>
+
+              <!-- Verified stamp overlay -->
+              <div class="flex items-center justify-between">
+                <div class="text-xs font-mono text-black/40">ID: HG-2025-00847</div>
+                <div class="border-4 border-green-600 text-green-600 font-black text-lg p-2 uppercase rotate-[-8deg] opacity-70 group-hover:opacity-100 transition-opacity">
+                  VERIFIED!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Age gate callout -->
+          <div class="mt-4 bg-neo-primary border-4 border-black p-4 shadow-neo rotate-1 flex items-center gap-4">
+            <div class="text-3xl">🔞</div>
+            <div>
+              <div class="font-black uppercase">Automatic Age Gating</div>
+              <div class="font-bold text-sm">You're only matched with students in your age band. No exceptions.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Safety pillars -->
+        <div class="space-y-4">
+          <h3 class="text-3xl font-black uppercase mb-6">How We Keep It Safe</h3>
+
+          {[
+            {
+              icon: Key,
+              title: "Singpass Authentication",
+              desc: "Identity verified against Singapore's national digital ID system. No fake accounts, no impersonation.",
+              color: "bg-neo-primary",
+              detail: "Integrates directly with MyInfo to confirm you're a real SG student."
+            },
+            {
+              icon: School,
+              title: "School Email Lock",
+              desc: "Only .edu.sg emails accepted. No Gmail, no personal accounts. Your school vouches for you.",
+              color: "bg-neo-secondary",
+              detail: "Every account tied to a verified institution — NUS, NTU, polytechnics, JCs."
+            },
+            {
+              icon: Users,
+              title: "Age Band Matching",
+              desc: "Automatically matched to your age group. Adults can't enter student spaces.",
+              color: "bg-neo-muted",
+              detail: "16–19 stays with 16–19. 20–25 stays with 20–25. No crossover."
+            },
+            {
+              icon: Ban,
+              title: "Zero Tolerance Policy",
+              desc: "Report bad behaviour. We escalate directly to institutions when needed.",
+              color: "bg-green-300",
+              detail: "Permanent bans. School notifications. No appeals for serious violations."
+            },
+          ].map((item) => (
+            <div class="group bg-white border-4 border-black p-4 shadow-neo hover:shadow-neo-md hover:-translate-y-1 transition-all cursor-default">
+              <div class="flex items-start gap-4">
+                <div class={`${item.color} border-4 border-black p-3 flex-shrink-0 group-hover:rotate-6 transition-transform`}>
+                  <item.icon className="w-7 h-7" />
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-black uppercase text-lg mb-1">{item.title}</h4>
+                  <p class="font-bold text-sm text-black/70">{item.desc}</p>
+                  <p class="font-medium text-xs text-black/50 mt-2 max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-300">{item.detail}</p>
+                </div>
+                <ChevronRight className="w-5 h-5 flex-shrink-0 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- COMING SOON SECTION -->
+  <section class="py-24 px-4 bg-black border-b-4 border-black relative overflow-hidden">
+    <!-- White dot pattern on black -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#fff 1.5px, transparent 1.5px); background-size: 20px 20px;"></div>
+
+    <!-- Big background text -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden select-none">
+      <span class="text-[18vw] font-black uppercase text-white/5 whitespace-nowrap">COMING SOON</span>
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+
+      <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
+        <div>
+          <div class="inline-block bg-neo-secondary border-4 border-black px-4 py-2 font-black text-xs uppercase tracking-widest mb-4 shadow-neo-white -rotate-1">🚀 Team Launch Announcement</div>
+          <h2 class="text-4xl sm:text-5xl md:text-7xl font-black uppercase leading-none text-white mb-4">
+            We're Launching<br/>
+            <span class="bg-neo-primary border-4 border-black px-3 shadow-neo-white inline-block rotate-1">First Communities</span>
+          </h2>
+          <p class="text-xl font-bold text-white/80 max-w-lg">
+            Our team is personally hosting the first wave of communities and events to kick things off. Be there from day one.
+          </p>
+        </div>
+        <div class="flex flex-col gap-4">
+          <div class="bg-neo-secondary border-4 border-black p-6 shadow-neo-white rotate-1">
+            <div class="font-black text-3xl uppercase mb-1">Day 1 Events</div>
+            <div class="font-bold text-lg mb-3">The Hangout! team will be hosting 6 IRL events across Singapore on launch day.</div>
+            <div class="flex items-center gap-3 text-sm font-bold">
+              <span class="bg-black text-white border-2 border-black px-2 py-1">📍 Orchard</span>
+              <span class="bg-black text-white border-2 border-black px-2 py-1">📍 Tampines</span>
+              <span class="bg-black text-white border-2 border-black px-2 py-1">📍 JB</span>
+            </div>
+          </div>
+          <div class="bg-neo-primary border-4 border-black p-6 shadow-neo-white -rotate-1">
+            <div class="font-black text-2xl uppercase mb-1">Stay Tuned!</div>
+            <div class="font-bold">Join the waitlist and we'll send you a first-look invite before anyone else.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Community preview grid -->
+      <!-- <div class="mb-8">
+        <div class="font-black uppercase tracking-widest text-white/60 text-sm mb-4 flex items-center gap-3">
+          <div class="flex-1 h-px bg-white/20"></div>
+          Communities dropping at launch
+          <div class="flex-1 h-px bg-white/20"></div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {comingSoonCommunities.map((c, i) => (
+            <div class={`bg-white border-4 border-black p-4 text-center group hover:-translate-y-2 hover:shadow-neo-white transition-all shadow-neo ${i % 3 === 0 ? "rotate-1" : i % 3 === 1 ? "-rotate-1" : "rotate-0"}`}>
+              <div class="text-3xl mb-2 group-hover:scale-125 transition-transform">{c.emoji}</div>
+              <div class="font-black text-xs uppercase leading-tight">{c.name}</div>
+              <div class="font-bold text-[10px] text-black/50 mt-1">{c.category}</div>
+              <div class="mt-2 bg-neo-secondary border border-black px-1 font-mono text-[9px] font-bold">{c.slots}</div>
+            </div>
+          ))}
+        </div>
+      </div> -->
+
+      <!-- CTA -->
+      <div class="text-center">
+        <p class="font-bold text-white/70 text-lg mb-6">Spots for first-wave communities are limited. Don't miss out.</p>
+        <button class="open-waitlist bg-neo-secondary border-4 border-black px-12 py-5 font-black text-2xl uppercase tracking-wider hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all shadow-neo-white flex items-center gap-3 mx-auto">
+          <Zap className="w-7 h-7 fill-black" />
+          Notify Me!
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="py-32 px-4 bg-neo-secondary border-b-4 border-black relative overflow-hidden">
+    <div class="absolute top-6 left-6 animate-spin-slow opacity-20 pointer-events-none">
+      <Star className="w-48 h-48" style={{WebkitTextStroke: "2px black", fill: "transparent", color: "transparent"}} />
+    </div>
+    <div class="absolute bottom-6 right-6 opacity-20 pointer-events-none" style="animation: spin-slow 10s linear infinite reverse;">
+      <Star className="w-32 h-32" style={{WebkitTextStroke: "2px black", fill: "transparent", color: "transparent"}} />
+    </div>
+
+    <div class="max-w-4xl mx-auto relative z-10 text-center">
+      <!-- Floating sticker -->
+      <div class="absolute -top-8 -left-8 hidden lg:flex items-center justify-center">
+        <div class="bg-neo-primary border-4 border-black p-4 -rotate-12 shadow-neo-md animate-bounce-slow">
+          <span class="text-2xl font-black text-white uppercase leading-none block">NO<br/>FOMO</span>
+        </div>
+      </div>
+      <div class="absolute -bottom-4 -right-12 hidden lg:block">
+        <div class="bg-white border-4 border-black p-4 rotate-6 shadow-neo-md">
+          <span class="font-black text-sm uppercase">Touch Grass 🌿<br/>IRL > Online</span>
+        </div>
+      </div>
+
+      <h2 class="text-6xl md:text-9xl font-black uppercase leading-none mb-6">
+        Don't<br/>
+        <span style="-webkit-text-stroke: 3px black; color: transparent;">Be</span>
+        <span class="bg-black text-neo-secondary px-4 border-4 border-black shadow-neo-md rotate-[-1deg] inline-block">Boring.</span>
+      </h2>
+      <p class="text-2xl font-bold mb-10 max-w-2xl mx-auto">
+        Join thousands of Singaporean students finding their tribe. Real hangouts, real people, zero risk.
+      </p>
+      <button class="open-waitlist bg-black text-white px-12 py-6 border-4 border-black font-black text-2xl uppercase tracking-wider hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all shadow-neo-xl flex items-center gap-3 mx-auto hover:bg-neo-primary hover:text-black">
+        <Zap className="w-8 h-8" />
+        Join Hangout! Now
+      </button>
+      <p class="mt-4 font-bold text-sm text-black/60">Free forever for students. No ads. No creeps.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black text-neo-bg py-16 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-12 mb-12">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-4">
+            <img src={logo.src} alt="Hangout!" class="w-16 h-auto filter invert" />
+            <h2 class="text-3xl font-black uppercase">Hangout!</h2>
+          </div>
+          <p class="text-lg font-bold text-white/70 max-w-md mb-6">
+            Singapore's safe, verified student community platform. Built for students, by students.
+          </p>
+          <div class="flex gap-2 flex-wrap">
+            <span class="bg-neo-secondary border-2 border-white/20 text-black px-2 py-1 font-black text-xs uppercase">🇸🇬 Singapore</span>
+            <span class="bg-neo-primary border-2 border-white/20 text-white px-2 py-1 font-black text-xs uppercase">Students Only</span>
+            <span class="border-2 border-white/20 px-2 py-1 font-black text-xs uppercase">Beta 2025</span>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-lg font-black uppercase mb-4 text-neo-secondary">Platform</h3>
+          <ul class="space-y-2 text-white/70 font-bold">
+            <li><a href="/communities" class="hover:text-neo-primary transition-colors">Communities</a></li>
+            <li><a href="#how-it-works" class="hover:text-neo-primary transition-colors">How It Works</a></li>
+            <li><a href="#safety" class="hover:text-neo-primary transition-colors">Safety</a></li>
+            <li><button class="open-waitlist hover:text-neo-secondary transition-colors text-left">Join Waitlist</button></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-black uppercase mb-4 text-neo-secondary">Legal</h3>
+          <ul class="space-y-2 text-white/70 font-bold">
+            <li><a href="#" class="hover:text-neo-primary transition-colors">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-neo-primary transition-colors">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-neo-primary transition-colors">Contact Support</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t-4 border-white/20 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="font-bold text-white/40 text-sm">© 2025 Hangout! All rights reserved.</p>
+        <p class="font-bold text-white/40 text-sm">Made with 💛 for Singapore students</p>
+      </div>
+    </div>
+  </footer>
+
+</Layout>
+
+<script>
+  // Waitlist Modal Logic
+  const modal = document.getElementById("waitlist-modal") as HTMLDialogElement;
+  const openBtns = document.querySelectorAll(".open-waitlist");
+  const closeBtn = document.getElementById("close-waitlist");
+  const form = document.getElementById("waitlist-form") as HTMLFormElement;
+  const success = document.getElementById("waitlist-success");
+  const emailInput = document.getElementById("waitlist-email") as HTMLInputElement;
+
+  openBtns.forEach((btn) => btn.addEventListener("click", () => modal?.showModal()));
+  closeBtn?.addEventListener("click", () => modal?.close());
+  modal?.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = emailInput?.value || "";
+    if (!email.toLowerCase().endsWith(".edu.sg")) {
+      emailInput.style.borderColor = "#FF6B6B";
+      emailInput.style.background = "#fff0f0";
+      emailInput.value = "";
+      emailInput.placeholder = "⚠️ Must be a .edu.sg school email!";
+      setTimeout(() => {
+        emailInput.style.borderColor = "";
+        emailInput.style.background = "";
+        emailInput.placeholder = "yourname@school.edu.sg";
+      }, 3000);
+      return;
+    }
+    form.classList.add("hidden");
+    success?.classList.remove("hidden");
+  });
+
+  // Mobile menu toggle
+  const menuBtn = document.getElementById("mobile-menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+  menuBtn?.addEventListener("click", () => {
+    mobileMenu?.classList.toggle("hidden");
+    mobileMenu?.classList.toggle("flex");
+  });
+
+  // Personality card hover effect - highlight matching communities
+  const personalityCards = document.querySelectorAll(".personality-card");
+  personalityCards.forEach((card) => {
+    card.addEventListener("click", () => {
+      personalityCards.forEach(c => c.classList.remove("ring-4", "ring-black", "ring-offset-2"));
+      card.classList.add("ring-4", "ring-black", "ring-offset-2");
+    });
+  });
+</script>

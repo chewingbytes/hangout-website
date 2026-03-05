@@ -1,0 +1,414 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import logo from "../../logo.png";
+import { ArrowRight, Search, Hash, Zap, Sparkles, Users, Star, ChevronRight, X } from "lucide-react";
+
+const communities: CollectionEntry<"communities">[] =
+  await getCollection("communities");
+
+const categories = [
+  "All",
+  ...new Set(
+    communities.map((c: CollectionEntry<"communities">) => c.data.category),
+  ),
+];
+
+const categoryEmojis: Record<string, string> = {
+  Gaming: "🎮",
+  Sports: "⚽",
+  Study: "📚",
+  Hobbies: "🎭",
+  Tech: "💻",
+  Chill: "🧋",
+};
+
+const categoryColors: Record<string, string> = {
+  Gaming: "bg-neo-secondary",
+  Sports: "bg-neo-primary",
+  Study: "bg-neo-muted",
+  Hobbies: "bg-green-300",
+  Tech: "bg-blue-300",
+  Chill: "bg-orange-200",
+};
+---
+
+<Layout title="Browse Communities | Hangout!">
+
+  <!-- Waitlist Modal -->
+  <dialog id="waitlist-modal" class="border-4 border-black max-w-md w-full mx-4">
+    <div class="bg-neo-bg p-8 relative">
+      <div class="absolute -top-5 -right-5 w-12 h-12 bg-neo-secondary border-4 border-black rotate-12 flex items-center justify-center shadow-neo">
+        <Sparkles className="w-6 h-6" />
+      </div>
+      <button
+        id="close-waitlist"
+        class="absolute top-4 right-4 w-10 h-10 border-4 border-black bg-white flex items-center justify-center font-black text-xl hover:bg-neo-primary hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo"
+        aria-label="Close"
+      >✕</button>
+
+      <div class="mb-6">
+        <div class="inline-block bg-neo-primary border-2 border-black px-3 py-1 font-black text-xs uppercase tracking-widest mb-3 -rotate-1">🇸🇬 Students Only</div>
+        <h2 class="text-4xl font-black uppercase leading-none mb-2">Join the Waitlist</h2>
+        <p class="font-bold text-lg">Get early access when Hangout! launches.</p>
+      </div>
+
+      <div class="bg-neo-secondary border-4 border-black p-4 mb-6">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-lg">🛡️</span>
+          <span class="font-black uppercase text-sm">Use Your School Email</span>
+        </div>
+        <p class="font-medium text-sm">Enter your official school email (e.g. <code class="bg-black text-white px-1 font-mono">you@tp.edu.sg</code>).</p>
+      </div>
+
+      <form id="waitlist-form" class="space-y-4">
+        <div>
+          <label class="block font-black uppercase text-sm mb-2 tracking-wider">School Email Address</label>
+          <input
+            type="email"
+            id="waitlist-email"
+            placeholder="yourname@school.edu.sg"
+            required
+            class="w-full border-4 border-black p-4 font-bold text-lg bg-white focus:bg-neo-secondary focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30"
+          />
+          <p class="text-xs font-bold mt-1 text-black/50">Must be a .edu.sg email, no personal emails allowed</p>
+        </div>
+        <button type="submit" class="w-full bg-neo-primary border-4 border-black py-4 font-black text-xl uppercase tracking-wider hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo-md flex items-center justify-center gap-3">
+          <Zap className="w-6 h-6 fill-black" />
+          Secure My Spot
+        </button>
+      </form>
+
+      <div id="waitlist-success" class="hidden text-center py-6">
+        <div class="text-5xl mb-4">🎉</div>
+        <h3 class="text-3xl font-black uppercase mb-2">You're on the list!</h3>
+        <p class="font-bold text-lg">We'll hit your inbox the moment we launch.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="min-h-screen bg-neo-bg">
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 bg-neo-bg border-b-4 border-black px-4 py-3">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="/" class="flex items-center gap-1 font-black uppercase tracking-tighter text-2xl">
+          <img src={logo.src} alt="Hangout!" class="w-16 h-auto object-contain" />
+          Hangout!
+        </a>
+        <div class="hidden md:flex gap-6 items-center font-bold">
+          <a href="/#how-it-works" class="uppercase text-sm tracking-wide hover:bg-black hover:text-white hover:px-3 hover:py-1 border-2 border-transparent hover:border-black transition-all">How It Works</a>
+          <a href="/#safety" class="uppercase text-sm tracking-wide hover:bg-black hover:text-white hover:px-3 hover:py-1 border-2 border-transparent hover:border-black transition-all">Safety</a>
+          <a href="/communities" class="uppercase text-sm tracking-wide bg-black text-white px-3 py-1 border-2 border-black">Communities</a>
+          <button class="open-waitlist bg-neo-secondary px-6 py-2 border-4 border-black font-black uppercase text-sm tracking-wide hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo flex items-center gap-2">
+            <Zap className="w-4 h-4 fill-black" /> Join Waitlist
+          </button>
+        </div>
+        <a href="/" class="md:hidden font-black uppercase text-sm border-2 border-black px-3 py-2 bg-white shadow-neo">← Back</a>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="border-b-4 border-black bg-white relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+      <!-- Big background text -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden select-none">
+        <span class="text-[15vw] font-black uppercase opacity-[0.04] whitespace-nowrap">COMMUNITIES</span>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 py-16 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-8 items-end">
+          <div>
+            <div class="inline-block bg-neo-primary border-2 border-black px-3 py-1 font-black text-xs uppercase tracking-widest mb-4 -rotate-1 shadow-neo">
+              {communities.length} Communities Available
+            </div>
+            <h1 class="text-4xl sm:text-6xl md:text-8xl font-black uppercase leading-none mb-4">
+              Find Your<br/>
+              <span class="bg-neo-secondary border-4 border-black px-3 inline-block rotate-[-1deg] shadow-neo-lg">Community</span>
+            </h1>
+            <p class="text-md sm:text-xl font-bold max-w-xl text-black/70 border-l-4 border-black pl-4 py-2">
+              From late-night prata hunts to orbital tech builds. Find the group that matches your vibe.
+            </p>
+          </div>
+          <div class="flex flex-col gap-3">
+            <div class="bg-neo-bg border-4 border-black p-4 shadow-neo flex items-center gap-4">
+              <div class="text-4xl">🧭</div>
+              <div>
+                <div class="font-black uppercase text-sm">Can’t find your community?</div>
+                <div class="font-bold text-xs text-black/60">Join the waitlist and be first to create your communities when we launch.</div>
+              </div>
+            </div>
+            <button class="open-waitlist bg-neo-primary border-4 border-black px-6 py-4 font-black uppercase text-lg shadow-neo-md hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center gap-2 justify-center">
+              <Zap className="w-5 h-5 fill-black" /> Join the waitlist
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div class="border-b-4 border-black bg-neo-secondary overflow-x-auto">
+      <div class="max-w-7xl mx-auto px-4 py-0 flex gap-0">
+        {categories.map((cat: string) => (
+          <button
+            data-filter={cat}
+            class={`filter-btn flex-shrink-0 flex items-center gap-2 px-5 py-4 border-r-4 border-black font-black uppercase text-sm tracking-wide hover:bg-black hover:text-white transition-colors ${cat === "All" ? "bg-black text-white" : "bg-neo-secondary"}`}
+          >
+            {cat !== "All" && <span>{categoryEmojis[cat] || ""}</span>}
+            {cat}
+          </button>
+        ))}
+        <div class="flex-1 min-w-[1px]"></div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+
+      <!-- Search + stats bar -->
+      <div class="flex flex-col md:flex-row gap-4 items-stretch mb-8">
+        <div class="relative flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" />
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Search communities, tags, vibes..."
+            class="w-full border-4 border-black p-4 pl-12 font-bold text-lg bg-white focus:bg-neo-secondary focus:outline-none focus:shadow-neo transition-all placeholder:text-black/40"
+          />
+        </div>
+        <div id="results-count" class="border-4 border-black bg-white px-6 flex items-center justify-center font-black text-sm uppercase tracking-wider min-w-[120px]">
+          {communities.length} Groups
+        </div>
+      </div>
+
+      <!-- Active filter indicator -->
+      <div id="active-filter-banner" class="hidden mb-6 bg-neo-primary border-4 border-black p-3 flex items-center gap-3 shadow-neo">
+        <span class="font-black uppercase text-sm">Showing:</span>
+        <span id="active-filter-label" class="font-black uppercase text-lg"></span>
+        <button id="clear-filter" class="ml-auto border-2 border-black bg-white px-3 py-1 font-black text-xs uppercase hover:bg-black hover:text-white transition-colors flex items-center gap-1">
+          <X className="w-4 h-4" /> Clear
+        </button>
+      </div>
+
+      <!-- Grid -->
+      <div id="community-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {communities.map((community, index) => (
+          <a
+            href={`/communities/${community.slug}`}
+            data-category={community.data.category}
+            data-title={community.data.title.toLowerCase()}
+            data-tags={community.data.tags.join(" ").toLowerCase()}
+            class={`community-card group block bg-white border-4 border-black hover:-translate-y-2 hover:shadow-neo-xl transition-all duration-200 shadow-neo-md overflow-hidden ${index % 5 === 0 ? "rotate-[0.5deg]" : index % 5 === 2 ? "-rotate-[0.5deg]" : ""}`}
+          >
+            <!-- Card top bar -->
+            <div class={`${categoryColors[community.data.category] || "bg-neo-bg"} border-b-4 border-black px-4 py-3 flex items-center justify-between`}>
+              <div class="flex items-center gap-2">
+                <span class="text-xl">{community.data.icon}</span>
+                <span class="font-black text-sm uppercase tracking-wide">{community.data.category}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="bg-black text-white font-mono text-xs px-2 py-0.5 font-bold">{community.data.vibe}</span>
+                <div class="flex gap-0.5">
+                  <div class="w-2 h-2 rounded-full bg-black/30 border border-black/50"></div>
+                  <div class="w-2 h-2 rounded-full bg-black/30 border border-black/50"></div>
+                  <div class="w-2 h-2 rounded-full bg-black border border-black/50"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <h3 class="text-2xl font-black uppercase leading-tight mb-2 group-hover:underline decoration-4 underline-offset-4 decoration-neo-primary">
+                {community.data.title}
+              </h3>
+
+              <p class="font-bold text-sm text-black/70 mb-4 line-clamp-2 leading-relaxed">
+                {community.data.description}
+              </p>
+
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-1.5 mb-5">
+                {community.data.tags.slice(0, 4).map((tag: string) => (
+                  <span class="text-xs font-bold bg-neo-bg border-2 border-black px-2 py-0.5 flex items-center gap-1">
+                    <Hash className="w-3 h-3" />{tag}
+                  </span>
+                ))}
+              </div>
+
+              <!-- Footer row -->
+              <div class="flex items-center justify-between pt-3 border-t-4 border-black">
+                <div class="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  <span class="font-black text-sm bg-neo-secondary border-2 border-black px-2 py-0.5 -rotate-1 inline-block">
+                    {community.data.memberCount}
+                  </span>
+                </div>
+                <span class="font-black text-sm uppercase flex items-center gap-1 group-hover:gap-2 transition-all">
+                  View <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="hidden mt-12 text-center border-4 border-dashed border-black p-16 bg-white">
+        <div class="text-6xl mb-4">🔍</div>
+        <h3 class="text-3xl font-black uppercase mb-2">Nothing Found</h3>
+        <p class="font-bold text-black/60 mb-6">Try a different search or browse a different category.</p>
+        <button id="reset-all" class="bg-neo-secondary border-4 border-black px-6 py-3 font-black uppercase shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
+          Show All Communities
+        </button>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-16 bg-black text-white border-4 border-black p-8 md:p-12 shadow-neo-xl relative overflow-hidden">
+        <div class="absolute inset-0 pointer-events-none opacity-10" style="background-image: radial-gradient(#fff 1.5px, transparent 1.5px); background-size: 20px 20px;"></div>
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h3 class="text-3xl font-black uppercase mb-2">Don't See Your Niche?</h3>
+            <p class="font-bold text-white/70">Join the waitlist — be first to create communities when we launch.</p>
+          </div>
+          <button class="open-waitlist flex-shrink-0 bg-neo-secondary border-4 border-black px-8 py-4 font-black uppercase text-lg shadow-neo-white hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center gap-2 text-black">
+            <Zap className="w-5 h-5 fill-black" /> Join Waitlist
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // -- State --
+  let currentCategory = "All";
+  let searchTerm = "";
+
+  // -- Elements --
+  const searchInput = document.getElementById("search-input") as HTMLInputElement;
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+  const cards = document.querySelectorAll<HTMLElement>(".community-card");
+  const resultsCount = document.getElementById("results-count");
+  const emptyState = document.getElementById("empty-state");
+  const activeFilterBanner = document.getElementById("active-filter-banner");
+  const activeFilterLabel = document.getElementById("active-filter-label");
+  const clearFilterBtn = document.getElementById("clear-filter");
+  const resetAllBtn = document.getElementById("reset-all");
+
+  // -- Waitlist Modal --
+  const modal = document.getElementById("waitlist-modal") as HTMLDialogElement;
+  const openBtns = document.querySelectorAll(".open-waitlist");
+  const closeBtn = document.getElementById("close-waitlist");
+  const form = document.getElementById("waitlist-form") as HTMLFormElement;
+  const successEl = document.getElementById("waitlist-success");
+  const emailInput = document.getElementById("waitlist-email") as HTMLInputElement;
+
+  openBtns.forEach((btn) => btn.addEventListener("click", () => modal?.showModal()));
+  closeBtn?.addEventListener("click", () => modal?.close());
+  modal?.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = emailInput?.value || "";
+    if (!email.toLowerCase().endsWith(".edu.sg")) {
+      emailInput.style.borderColor = "#FF6B6B";
+      emailInput.style.background = "#fff0f0";
+      emailInput.value = "";
+      emailInput.placeholder = "⚠️ Must be a .edu.sg school email!";
+      setTimeout(() => {
+        emailInput.style.borderColor = "";
+        emailInput.style.background = "";
+        emailInput.placeholder = "yourname@school.edu.sg";
+      }, 3000);
+      return;
+    }
+    form.classList.add("hidden");
+    successEl?.classList.remove("hidden");
+  });
+
+  // -- Filter logic --
+  function applyFilters() {
+    let visible = 0;
+    cards.forEach((card) => {
+      const cat = card.getAttribute("data-category") || "";
+      const title = card.getAttribute("data-title") || "";
+      const tags = card.getAttribute("data-tags") || "";
+
+      const matchesCat = currentCategory === "All" || cat === currentCategory;
+      const matchesSearch = searchTerm === "" || title.includes(searchTerm) || tags.includes(searchTerm);
+
+      if (matchesCat && matchesSearch) {
+        card.style.display = "";
+        visible++;
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    if (resultsCount) resultsCount.textContent = `${visible} Group${visible !== 1 ? "s" : ""}`;
+
+    if (emptyState) emptyState.classList.toggle("hidden", visible > 0);
+
+    // Active filter banner
+    if (activeFilterBanner && activeFilterLabel) {
+      if (currentCategory !== "All") {
+        activeFilterBanner.classList.remove("hidden");
+        activeFilterBanner.classList.add("flex");
+        activeFilterLabel.textContent = currentCategory;
+      } else {
+        activeFilterBanner.classList.add("hidden");
+        activeFilterBanner.classList.remove("flex");
+      }
+    }
+  }
+
+  function setCategory(cat: string) {
+    currentCategory = cat;
+    filterBtns.forEach((btn) => {
+      const isActive = btn.getAttribute("data-filter") === cat;
+      btn.classList.toggle("bg-black", isActive);
+      btn.classList.toggle("text-white", isActive);
+      btn.classList.toggle("bg-neo-secondary", !isActive);
+      btn.classList.remove("text-black");
+      if (!isActive) btn.classList.add("text-black");
+    });
+    applyFilters();
+  }
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener("click", () => setCategory(btn.getAttribute("data-filter") || "All"));
+  });
+
+  searchInput?.addEventListener("input", (e) => {
+    searchTerm = (e.target as HTMLInputElement).value.toLowerCase().trim();
+    applyFilters();
+  });
+
+  clearFilterBtn?.addEventListener("click", () => setCategory("All"));
+  resetAllBtn?.addEventListener("click", () => {
+    searchInput.value = "";
+    searchTerm = "";
+    setCategory("All");
+  });
+
+  // -- Auto-filter from URL param --
+  function initFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get("category");
+    if (cat) {
+      // Find matching category (case-insensitive)
+      const match = Array.from(filterBtns).find(
+        (btn) => (btn.getAttribute("data-filter") || "").toLowerCase() === cat.toLowerCase()
+      );
+      if (match) {
+        setCategory(match.getAttribute("data-filter") || "All");
+        // Scroll to the grid after a tick
+        setTimeout(() => {
+          document.getElementById("community-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
+      }
+    } else {
+      setCategory("All");
+    }
+  }
+
+  initFromURL();
+</script>
