@@ -1636,7 +1636,7 @@ const comingSoonCommunities = [
     }
 
     try {
-      const response = await fetch("http://46.62.247.253:4321/api/waitlist", {
+      const response = await fetch("https://server.hangoutstudios.com/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -1691,7 +1691,7 @@ const comingSoonCommunities = [
     };
 
     try {
-      const response = await fetch("http://46.62.247.253:4321/api/contact", {
+      const response = await fetch("https://server.hangoutstudios.com/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
