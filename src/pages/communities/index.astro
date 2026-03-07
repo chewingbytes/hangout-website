@@ -76,7 +76,7 @@ const categoryColors: Record<string, string> = {
         </div>
 
         <div>
-          <label class="block font-black uppercase text-sm mb-2 tracking-wider">What are you into? (Select any)</label>
+          <label class="block font-black uppercase text-sm mb-2 tracking-wider">What are you into? <span class="text-black/50 normal-case font-bold text-xs ml-1">(Optional)</span></label>
           <div class="max-h-40 overflow-y-auto border-4 border-black p-3 bg-neo-bg mb-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:bg-white">
             <div class="flex flex-wrap gap-2" id="community-pills">
               {
@@ -110,7 +110,7 @@ const categoryColors: Record<string, string> = {
           <input
             type="text"
             id="custom-community"
-            placeholder="Other? Type here..."
+            placeholder="Other? Type here... (Optional)"
             class="w-full border-4 border-black p-3 font-bold text-sm bg-white focus:bg-neo-primary focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30"
           />
         </div>
