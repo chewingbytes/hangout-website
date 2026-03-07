@@ -227,9 +227,8 @@ const comingSoonCommunities = [
 ];
 
 const allCommunities = await getCollection("communities");
-const shuffledCommunities = [...allCommunities].sort(() => 0.5 - Math.random());
-const randomComm1 = shuffledCommunities[0];
-const randomComm2 = shuffledCommunities[1] || shuffledCommunities[0];
+const randomComm1 = allCommunities.find(c => c.slug === "badminton-casuals") || allCommunities[0];
+const randomComm2 = allCommunities.find(c => c.slug === "board-game-geeks") || allCommunities[1] || allCommunities[0];
 
 ---
 
