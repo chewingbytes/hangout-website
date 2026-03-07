@@ -116,6 +116,48 @@ const sampleMembers = [
           />
           <p class="text-xs font-bold mt-1 text-black/50">Must end in .edu.sg</p>
         </div>
+
+        <div>
+          <label class="block font-black uppercase text-sm mb-2 tracking-wider">What else are you into? (Optional)</label>
+          <div class="max-h-40 overflow-y-auto border-4 border-black p-3 bg-white mb-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:bg-white">
+            <div class="flex flex-wrap gap-2" id="community-pills">
+              {
+                [
+                  "Badminton 🏸",
+                  "Bouldering 🧗",
+                  "Cafe Hopping ☕",
+                  "Coding & Tech 💻",
+                  "Midnight Prata 🍛",
+                  "PC Gaming 🎮",
+                  "Mobile Gaming 📱",
+                  "Board Games 🎲",
+                  "Photography 📸",
+                  "Thrift Shopping 👕",
+                  "Running 🏃",
+                  "Study Grinding 📚",
+                  "Side Hustles 🚀",
+                  "Anime/Cosplay 🎭",
+                  "Music/Jamming 🎸",
+                ].filter(item => !item.toLowerCase().includes(community.data.title.toLowerCase())).map((item) => (
+                  <label class="cursor-pointer relative">
+                    <input type="checkbox" name="communities" value={item} class="peer sr-only" />
+                    <span class="block px-3 py-1 text-sm font-bold border-2 border-black bg-neo-muted peer-checked:bg-neo-primary peer-checked:text-black peer-hover:-translate-y-0.5 peer-active:translate-y-0 transition-all select-none">
+                      {item}
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </div>
+          <input
+            type="text"
+            id="custom-community"
+            placeholder="Other? Type here..."
+            class="w-full border-4 border-black p-3 font-bold text-sm bg-white focus:bg-neo-primary focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30"
+          />
+          <input type="hidden" id="current-community" value={community.data.title} />
+        </div>
+
         <button
           type="submit"
           class="w-full bg-neo-primary border-4 border-black py-4 font-black text-xl uppercase tracking-wider hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-neo-md flex items-center justify-center gap-2"
@@ -383,16 +425,66 @@ const sampleMembers = [
     if (e.target === modal) modal.close();
   });
 
-  form?.addEventListener("submit", (e) => {
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = emailInput?.value || "";
-    if (!email.endsWith(".edu.sg")) {
+    if (!email.toLowerCase().endsWith(".edu.sg")) {
       emailInput.style.borderColor = "#FF6B6B";
-      emailInput.placeholder = "Must be a .edu.sg email!";
+      emailInput.style.background = "#fff0f0";
+      emailInput.placeholder = "⚠️ Must be a .edu.sg email!";
       emailInput.value = "";
+      setTimeout(() => {
+        emailInput.style.borderColor = "";
+        emailInput.style.background = "";
+        emailInput.placeholder = "yourname@school.edu.sg";
+      }, 3000);
       return;
     }
-    form.classList.add("hidden");
-    success?.classList.remove("hidden");
+
+    try {
+      const selectedCommunities = Array.from(
+        document.querySelectorAll('input[name="communities"]:checked')
+      ).map((cb: any) => cb.value);
+
+      const customCommInput = document.getElementById("custom-community") as HTMLInputElement;
+      if (customCommInput?.value?.trim()) {
+        selectedCommunities.push(customCommInput.value.trim());
+      }
+
+      // Add the current community they are viewing
+      const currentCommInput = document.getElementById("current-community") as HTMLInputElement;
+      if (currentCommInput?.value?.trim()) {
+        selectedCommunities.push(currentCommInput.value);
+      }
+
+      const response = await fetch("https://server.hangoutstudios.com/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          email, 
+          communities: Array.from(new Set(selectedCommunities)) // Deduplicate just in case
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        const message = typeof payload?.message === "string" ? payload.message : "Something went wrong.";
+        throw new Error(message);
+      }
+
+      form.classList.add("hidden");
+      success?.classList.remove("hidden");
+    } catch (error: any) {
+      emailInput.value = "";
+      emailInput.style.borderColor = "#FF6B6B";
+      emailInput.style.background = "#fff0f0";
+      emailInput.placeholder = `⚠️ ${error.message}`;
+      
+      setTimeout(() => {
+        emailInput.style.borderColor = "";
+        emailInput.style.background = "";
+        emailInput.placeholder = "yourname@school.edu.sg";
+      }, 3000);
+    }
   });
 </script>
